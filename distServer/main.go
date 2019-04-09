@@ -35,7 +35,7 @@ func main()  {
 func startServer()  {
     http.HandleFunc("/Check", Check)
 
-    err := http.ListenAndServe("0.0.0.0:8000", nil)
+    err := http.ListenAndServe("0.0.0.0:8080", nil)
     if err != nil {
         log.Fatal("ListenAndServe: ", err)
     }

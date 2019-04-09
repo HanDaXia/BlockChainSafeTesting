@@ -20,7 +20,7 @@ services:
     container_name: cryptoServer
     image: normalcrypto
     tty: true
-    working_dir: /opt/gopath/src/nromalCrypto
+    working_dir: /opt/gopath/src/normalCrypto
     command: normalCrypto
     depends_on:
       - distServer
