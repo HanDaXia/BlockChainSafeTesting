@@ -1,0 +1,28 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+  distServer:
+    container_name: distServer
+    image: distserver
+    tty: true
+    working_dir: /opt/gopath/src/distServer
+    command: distServer
+    ports:
+      - 8080:8080
+      - 6000:6000
+
+  cryptoServer:
+    container_name: cryptoServer
+    image: normalcrypto
+    tty: true
+    working_dir: /opt/gopath/src/nromalCrypto
+    command: normalCrypto
+    depends_on:
+      - distServer
+    ports:
+      - 8081:8081
