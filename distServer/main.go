@@ -42,9 +42,10 @@ func startServer()  {
 }
 
 func startRegistServer()  {
-    http.HandleFunc("/RegistServer", RegistServer)
+    registerHttp := http.NewServeMux()
+    registerHttp.HandleFunc("/RegistServer", RegistServer)
 
-    err := http.ListenAndServe(":6000", nil)
+    err := http.ListenAndServe(":6000", registerHttp)
     if err != nil {
         log.Fatal("ListenAndServe: ", err)
     }
