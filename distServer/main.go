@@ -3,7 +3,6 @@ package main
 import (
     "distServer/distributor"
     "encoding/json"
-    "fmt"
     "io/ioutil"
     "log"
     "net/http"
@@ -52,38 +51,50 @@ func startRegistServer()  {
 }
 
 func Check(w http.ResponseWriter, r *http.Request)  {
-    body, _ := ioutil.ReadAll(r.Body)
+    if r.Method == "POST" {
+        body, _ := ioutil.ReadAll(r.Body)
+        var request =  distributor.CheckRequest{}
 
-    var request =  distributor.CheckRequest{}
-
-    if err := json.Unmarshal(body, &request); err == nil {
-        result, err := distributor.SendRequestToServer(request)
-        if err != nil {
-            ResponseWithOrigin(w, r, http.StatusInternalServerError, []byte(err.Error()))
-            return
+        if err := json.Unmarshal(body, &request); err == nil {
+            result, err := distributor.SendRequestToServer(request)
+            if err != nil {
+                ResponseWithOrigin(w, r, http.StatusInternalServerError, []byte(err.Error()))
+                return
+            }
+            ret := CheckResponse{result}
+            resp, err := json.Marshal(ret)
+            if err != nil{
+                ResponseWithOrigin(w, r, http.StatusInternalServerError, []byte(err.Error()))
+                return
+            }
+            ResponseWithOrigin(w, r, http.StatusOK, resp)
+        } else {
+            errMsg, _ := json.Marshal("Unmarshal request failed")
+            ResponseWithOrigin(w, r, http.StatusBadRequest, errMsg)
         }
-        ret := CheckResponse{result}
-        resp, err := json.Marshal(ret)
-        if err != nil{
-            ResponseWithOrigin(w, r, http.StatusInternalServerError, []byte(err.Error()))
-            return
-        }
-        ResponseWithOrigin(w, r, http.StatusOK, resp)
     } else {
-        fmt.Println(err)
+        errMsg, _ := json.Marshal("Just surport Post request")
+        ResponseWithOrigin(w, r, http.StatusBadRequest, errMsg)
     }
+
 }
 
 func RegistServer(w http.ResponseWriter, r *http.Request)  {
-    body, _ := ioutil.ReadAll(r.Body)
-    var request =  RegistRequest{}
+    if r.Method == "POST" {
+        body, _ := ioutil.ReadAll(r.Body)
+        var request =  RegistRequest{}
 
-    if err := json.Unmarshal(body, &request); err == nil {
-        distributor.ServerUpdate(request.ServerType, request.ServerAddress)
-        ResponseWithOrigin(w, r, http.StatusOK, nil)
+        if err := json.Unmarshal(body, &request); err == nil {
+            distributor.ServerUpdate(request.ServerType, request.ServerAddress)
+            ResponseWithOrigin(w, r, http.StatusOK, nil)
+        } else {
+            ResponseWithOrigin(w, r, http.StatusBadRequest, []byte(err.Error()))
+        }
     } else {
-        ResponseWithOrigin(w, r, http.StatusBadRequest, []byte(err.Error()))
+        errMsg, _ := json.Marshal("Just surport Post request")
+        ResponseWithOrigin(w, r, http.StatusBadRequest, errMsg)
     }
+
 
 }
 
