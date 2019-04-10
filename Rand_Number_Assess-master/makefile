@@ -21,6 +21,7 @@ assess: $(OBJ)
 	$(CC) -fPIC -shared -o libtest.so $(OBJ) -lm
 
 $(OBJDIR)/assess.o: $(SRCDIR)/assess.c defs.h decls.h utilities.h
+	@mkdir -p obj
 	$(CC) -o $@ -c -fPIC $(SRCDIR)/assess.c
 
 $(OBJDIR)/frequency.o: $(SRCDIR)/frequency.c defs.h externs.h

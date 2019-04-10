@@ -2,9 +2,11 @@ CRYPTO_PATH = normalCrypto/image/payload
 DISTSERVER_PATH = distServer/image/payload
 RAND_PATH = Rand_Number_Assess-master
 
+
 all: normalcrypto_docker distserver_docker
 
 normalcrypto_docker: $(CRYPTO_PATH)/normalcrypto
+	@cd $(RAND_PATH) && make && cd ..
 	@cp $(RAND_PATH)/libtest.so $(CRYPTO_PATH)
 	@docker build -t normalcrypto normalCrypto/image
 
