@@ -9,7 +9,7 @@ package randomCheck
 typedef int* (*check_t)(char* b);
 void *handle = NULL;
 int loadSo(){
-    handle = dlopen("/usr/local/binlibtest.so", RTLD_LAZY);
+    handle = dlopen("/usr/local/bin/libtest.so", RTLD_LAZY);
     if(!handle){
         printf("dlopen - %s\n", dlerror());
         return -1;

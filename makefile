@@ -1,3 +1,9 @@
+# This makefile defines the following targets
+#
+#   - all (default) - builds all targets
+#   - clean -remove all file produced by this file
+
+
 CRYPTO_PATH = normalCrypto/image/payload
 DISTSERVER_PATH = distServer/image/payload
 RAND_PATH = Rand_Number_Assess-master
@@ -25,7 +31,4 @@ $(DISTSERVER_PATH)/distserver:
 
 .PHONY: clean
 clean :
-	@rm -rf $(CRYPTO_PATH)
-	@rm -rf $(DISTSERVER_PATH)
-	@rm -rf $(RAND_PATH)/obj
-	@rm -f $(RAND_PATH)/libtest.so
+	@rm -rf $(CRYPTO_PATH) $(DISTSERVER_PATH) $(RAND_PATH)/obj $(RAND_PATH)/libtest.so
