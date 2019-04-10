@@ -27,3 +27,5 @@ $(DISTSERVER_PATH)/distserver:
 clean :
 	@rm -rf $(CRYPTO_PATH)
 	@rm -rf $(DISTSERVER_PATH)
+	@rm -rf $(RAND_PATH)/obj
+	@rm -f $(RAND_PATH)/libtest.so
