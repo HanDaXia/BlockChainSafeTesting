@@ -10,7 +10,7 @@ services:
     container_name: distServer
     image: distserver
     tty: true
-    working_dir: /opt/gopath/src/distServer
+    working_dir: /usr/local/bin
     command: distServer
     ports:
       - 8080:8080
@@ -20,7 +20,7 @@ services:
     container_name: cryptoServer
     image: normalcrypto
     tty: true
-    working_dir: /opt/gopath/src/normalCrypto
+    working_dir: /usr/local/bin
     command: normalCrypto
     depends_on:
       - distServer

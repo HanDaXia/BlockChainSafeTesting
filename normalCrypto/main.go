@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"normalCrypto/randomCheck"
 	"normalCrypto/signatureCheck"
+	"os"
 )
 
 type VerifySignatureResult struct {
@@ -15,7 +16,26 @@ type VerifySignatureResult struct {
 }
 
 type RandomCheckResult struct {
-	result string
+	Result string
+}
+
+func TestRandom()  {
+    var bytes []byte
+    //for i := 0; i < 10000000; i++{
+    //    bit := rand.Int() % 2
+    //    bytes = append(bytes, byte(bit + 48))
+    //}
+    filePath := "/home/hanhu/Rand_Number_Assess/data/data.pi"
+    f, err := os.Open(filePath)
+    if err != nil {
+    	fmt.Println(err.Error())
+	}
+    bytes, err = ioutil.ReadAll(f)
+    if err != nil {
+		fmt.Println(err.Error())
+	}
+    result, _ := randomCheck.DealRandomCheck(1, bytes)
+    fmt.Println(result)
 }
 
 func main() {
@@ -70,12 +90,13 @@ func RandomNumberCheck(w http.ResponseWriter, r *http.Request) {
 		var randomCheckInfo randomCheck.RandomCheckInfo
 
 		if err := json.Unmarshal(body, &randomCheckInfo); err == nil {
-			if len(randomCheckInfo.RandomData) < randomCheck.MINRAMDOMDATA{
-				errMsg, _ := json.Marshal(fmt.Sprintf("RandomData must larger than %d", randomCheck.MINRAMDOMDATA))
-				ResponseWithOrigin(w, r, http.StatusBadRequest, errMsg)
-				return
-			}
-			result := randomCheck.DealRandomCheck(randomCheckInfo.RandomCheckType, randomCheckInfo.RandomData)
+			result, err := randomCheck.DealRandomCheck(randomCheckInfo.RandomCheckType, randomCheckInfo.RandomData)
+			fmt.Println("randomCheck result = " + result)
+			if err != nil {
+                errMsg, _ := json.Marshal(err.Error())
+                ResponseWithOrigin(w, r, http.StatusBadRequest, errMsg)
+                return
+            }
 			ret := RandomCheckResult{result}
 			resp, err := json.Marshal(ret)
 			if err != nil {

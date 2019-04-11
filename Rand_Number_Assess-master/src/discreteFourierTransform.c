@@ -21,13 +21,14 @@ DiscreteFourierTransform(int n)
 	if ( ((X = (double*) calloc(n,sizeof(double))) == NULL) ||
 		 ((wsave = (double *)calloc(2*n,sizeof(double))) == NULL) ||
 		 ((m = (double*)calloc(n/2+1, sizeof(double))) == NULL) ) {
-			fprintf(stats[7],"\t\tUnable to allocate working arrays for the DFT.\n");
+			//fprintf(stats[7],"\t\tUnable to allocate working arrays for the DFT.\n");
 			if( X != NULL )
 				free(X);
 			if( wsave != NULL )
 				free(wsave);
 			if( m != NULL )
 				free(m);
+			stats[TEST_FFT] = -2;
 			return;
 	}
 	for ( i=0; i<n; i++ )
@@ -64,7 +65,7 @@ DiscreteFourierTransform(int n)
 	fprintf(stats[TEST_FFT], "%s\t\tp_value = %f\n\n", p_value < ALPHA ? "FAILURE" : "SUCCESS", p_value);
 	fprintf(results[TEST_FFT], "%f\n", p_value);*/
 	if (stats[TEST_FFT] != 1) {
-		p_value < ALPHA ? 1 : 0;
+		stats[TEST_FFT] = p_value < ALPHA ? 1 : 0;
 	}
 
 	free(X);

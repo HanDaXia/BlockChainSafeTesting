@@ -34,6 +34,7 @@ NonOverlappingTemplateMatchings(int m, int n)
 	if ( (Wj = (unsigned int*)calloc(N, sizeof(unsigned int))) == NULL ) {
 		/*fprintf(stats[TEST_NONPERIODIC], "\tNONOVERLAPPING TEMPLATES TESTS ABORTED DUE TO ONE OF THE FOLLOWING : \n");
 		fprintf(stats[TEST_NONPERIODIC], "\tInsufficient memory for required work space.\n");*/
+		stats[TEST_NONPERIODIC] = -2;
 		return;
 	}
 	lambda = (M-m+1)/pow(2, m);
@@ -49,6 +50,7 @@ NonOverlappingTemplateMatchings(int m, int n)
 		fprintf(stats[TEST_NONPERIODIC], "\tInsufficient memory for required work space.\n");*/
 		if ( sequence != NULL )
 			free(sequence);
+		stats[TEST_NONPERIODIC] = -3;
 	}
 	else {
 		/*fprintf(stats[TEST_NONPERIODIC], "\t\t  NONPERIODIC TEMPLATES TEST\n");
@@ -87,7 +89,7 @@ NonOverlappingTemplateMatchings(int m, int n)
 				sequence[k] = bit;
 				//fprintf(stats[TEST_NONPERIODIC], "%d", sequence[k]);
 			}
-			fprintf(stats[TEST_NONPERIODIC], " ");
+			//fprintf(stats[TEST_NONPERIODIC], " ");
 			for ( k=0; k<=K; k++ )
 				nu[k] = 0;
 			for ( i=0; i<N; i++ ) {
@@ -118,7 +120,7 @@ NonOverlappingTemplateMatchings(int m, int n)
 			}
 			p_value = cephes_igamc(N/2.0, chi2/2.0);
 		
-			if ( isNegative(p_value) || isGreaterThanOne(p_value) )
+			//if ( isNegative(p_value) || isGreaterThanOne(p_value) )
 				//fprintf(stats[TEST_NONPERIODIC], "\t\tWARNING:  P_VALUE IS OUT OF RANGE.\n");
 
 			//fprintf(stats[TEST_NONPERIODIC], "%9.6f %f %s %3d\n", chi2, p_value, p_value < ALPHA ? "FAILURE" : "SUCCESS", jj);

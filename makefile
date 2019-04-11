@@ -14,6 +14,7 @@ all: normalcrypto_docker distserver_docker
 normalcrypto_docker: $(CRYPTO_PATH)/normalcrypto
 	@cd $(RAND_PATH) && make && cd ..
 	@cp $(RAND_PATH)/libtest.so $(CRYPTO_PATH)
+	@cp -rf $(RAND_PATH)/templates $(CRYPTO_PATH)
 	@docker build -t normalcrypto normalCrypto/image
 
 $(CRYPTO_PATH)/normalcrypto:

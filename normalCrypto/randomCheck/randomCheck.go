@@ -40,6 +40,7 @@ int readCheckResult(int* result, int index)
 import "C"
 import (
     "fmt"
+    "github.com/pkg/errors"
 )
 
 const (
@@ -59,14 +60,18 @@ type RandomCheckInfo struct {
     RandomData     []byte
 }
 
-func DealRandomCheck(randomType int, randoms []byte) string {
+func DealRandomCheck(randomType int, randoms []byte) (string, error) {
     laodResult := 0
     if C.handle == nil {
         laodResult = int(C.loadSo())
     }
     fmt.Println(laodResult)
     if laodResult == 0 {
-        randomsString := string(randoms)
+        StrBytes := StringFilter(randoms)
+        if len(StrBytes) < MINRAMDOMDATA {
+            return "", errors.New(fmt.Sprintf("Random data must larger than %d", MINRAMDOMDATA))
+        }
+        randomsString := string(StrBytes)
         point := C.callRandomCheck(C.CString(randomsString))
         resultStr := ""
         resultCount := 0
@@ -77,13 +82,25 @@ func DealRandomCheck(randomType int, randoms []byte) string {
         }
         for i := 1; i <= resultCount; i++ {
             result := C.readCheckResult(point, C.int(i))
-            resultStr += testNames[i] + "=" + string(48 + int(result))
+            resultStr += testNames[i] + "=" + fmt.Sprintf("%d", int(result))
             if i != resultCount {
                 resultStr += "&"
             }
         }
-        return resultStr
+        return resultStr, nil
     }
 
-    return ""
+    return "", errors.New("Load  randomCheck lib failed")
+}
+
+func StringFilter(orgString []byte) []byte {
+    return orgString
+    var resultBytes []byte
+    for i := 0; i < len(orgString); i++ {
+        if orgString[i] == byte(48) || orgString[i] == byte(49) {
+            newValue := byte(int(orgString[i]) -48)
+            resultBytes = append(resultBytes, newValue)
+        }
+    }
+    return resultBytes
 }

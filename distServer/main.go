@@ -21,7 +21,11 @@ type RegistRequest struct {
 
 
 type CheckResponse struct {
-    result []byte
+    Result []byte
+}
+
+type RegistResponse struct {
+    Result string
 }
 
 func main()  {
@@ -87,7 +91,8 @@ func RegistServer(w http.ResponseWriter, r *http.Request)  {
 
         if err := json.Unmarshal(body, &request); err == nil {
             distributor.ServerUpdate(request.ServerType, request.ServerAddress)
-            ResponseWithOrigin(w, r, http.StatusOK, nil)
+            ret, _ := json.Marshal(RegistResponse{"ok"})
+            ResponseWithOrigin(w, r, http.StatusOK, ret)
         } else {
             ResponseWithOrigin(w, r, http.StatusBadRequest, []byte(err.Error()))
         }

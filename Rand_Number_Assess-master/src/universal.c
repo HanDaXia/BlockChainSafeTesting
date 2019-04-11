@@ -50,6 +50,7 @@ Universal(int n)
 		fprintf(stats[TEST_UNIVERSAL], "\t\tERROR:  L IS OUT OF RANGE.\n");
 		fprintf(stats[TEST_UNIVERSAL], "\t\t-OR- :  Q IS LESS THAN %f.\n", 10*pow(2, L));
 		fprintf(stats[TEST_UNIVERSAL], "\t\t-OR- :  Unable to allocate T.\n");*/
+		stats[TEST_UNIVERSAL] = -2;
 		return;
 	}
 	
@@ -92,14 +93,14 @@ Universal(int n)
 
 	arg = fabs(phi-expected_value[L])/(sqrt2 * sigma);
 	p_value = erfc(arg);
-	if ( isNegative(p_value) || isGreaterThanOne(p_value) )
+	//if ( isNegative(p_value) || isGreaterThanOne(p_value) )
 		//fprintf(stats[TEST_UNIVERSAL], "\t\tWARNING:  P_VALUE IS OUT OF RANGE\n");
 
 	/*fprintf(stats[TEST_UNIVERSAL], "%s\t\tp_value = %f\n\n", p_value < ALPHA ? "FAILURE" : "SUCCESS", p_value); fflush(stats[TEST_UNIVERSAL]);
 	fprintf(results[TEST_UNIVERSAL], "%f\n", p_value); fflush(results[TEST_UNIVERSAL]);*/
-		if (stats[TEST_UNIVERSAL] != 1) {
-			stats[TEST_UNIVERSAL] = p_value < ALPHA ? 1 : 0;
-		}
+	if (stats[TEST_UNIVERSAL] != 1) {
+		stats[TEST_UNIVERSAL] = p_value < ALPHA ? 1 : 0;
+	}
 	
 	free(T);
 }

@@ -114,8 +114,8 @@ RandomExcursions(int n)
 			fprintf(stats[TEST_RND_EXCURSION], "%s\t\tx = %2d chi^2 = %9.6f p_value = %f\n",
 					p_value < ALPHA ? "FAILURE" : "SUCCESS", x, sum, p_value);
 			fprintf(results[TEST_RND_EXCURSION], "%f\n", p_value); fflush(results[TEST_RND_EXCURSION]);*/
-			if (results[TEST_RND_EXCURSION] != 1) {
-				results[TEST_RND_EXCURSION] = p_value < ALPHA ? 1 : 0;
+			if (stats[TEST_RND_EXCURSION] != 1) {
+				stats[TEST_RND_EXCURSION] = p_value < ALPHA ? 1 : 0;
 			}
 		}
 	} 

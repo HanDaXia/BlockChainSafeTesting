@@ -438,7 +438,7 @@ void openOutputStreams(int option)
 	}
 	/*printf("   How many bitstreams? ");
 	scanf("%d", &numOfBitStreams);*/
-	tp.numOfBitStreams = 1; //numOfBitStreams;
+	tp.numOfBitStreams = 10; //numOfBitStreams;
 	//printf("\n");
 }
 
@@ -529,14 +529,14 @@ void nist_test_suite()
 	
 	if ( (testVector[0] == 1) || (testVector[TEST_APEN] == 1) )
 	{
-    if (tp.testmode == MODE_GM)  //国密测试m=2,5
-    {
-      ApproximateEntropy(2, tp.n);
-      ApproximateEntropy(5, tp.n);
+	    if (tp.testmode == MODE_GM)  //国密测试m=2,5
+	    {
+	      ApproximateEntropy(2, tp.n);
+	      ApproximateEntropy(5, tp.n);
+	    }
+	    else
+	      ApproximateEntropy(tp.approximateEntropyBlockLength, tp.n);
     }
-    else
-      ApproximateEntropy(tp.approximateEntropyBlockLength, tp.n);
-  }
 
 	if ( (testVector[0] == 1) || (testVector[TEST_RND_EXCURSION] == 1) )
 		RandomExcursions(tp.n);

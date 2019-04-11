@@ -86,7 +86,7 @@ int* checkRandomNumbers(char *stream)
 	chooseMode(MODE_GM);
 	chooseTests(1);
 	
-	openOutputStreams(option);
+	//openOutputStreams(option);
 	invokeTestSuite(option, stream);
 	
 	/*for (i = 1; i <= NUMOFTESTS; i++) {
