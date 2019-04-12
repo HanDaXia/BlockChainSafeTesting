@@ -7,6 +7,7 @@
 CRYPTO_PATH = normalCrypto/image/payload
 DISTSERVER_PATH = distServer/image/payload
 RAND_PATH = Rand_Number_Assess-master
+MESSAGEHUB_PATH=messagehub/image/payload
 
 
 all: normalcrypto_docker distserver_docker
@@ -30,6 +31,13 @@ $(DISTSERVER_PATH)/distserver:
 	@mkdir -p $(DISTSERVER_PATH)
 	@go build -o $(DISTSERVER_PATH)/distServer distServer
 
+messagehub_docker:
+	@mkdir -p $(MESSAGEHUB_PATH)
+	@go build -o $(MESSAGEHUB_PATH)/messagehub ./messagehub
+	@docker build -t messagehub messagehub/image
+
+$(MESSAGEHUB_IMAGE)/messagehub:
+
 .PHONY: clean
 clean :
-	@rm -rf $(CRYPTO_PATH) $(DISTSERVER_PATH) $(RAND_PATH)/obj $(RAND_PATH)/libtest.so
+	@rm -rf $(CRYPTO_PATH) $(DISTSERVER_PATH) $(RAND_PATH)/obj $(RAND_PATH)/libtest.so $(MESSAGEHUB_PATH)
