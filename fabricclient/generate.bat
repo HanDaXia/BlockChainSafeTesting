@@ -1,0 +1,1 @@
+go build -tags=nopkcs11 -ldflags "-H windowsgui" ./main.go
