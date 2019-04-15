@@ -6,7 +6,6 @@ package x509
 
 import (
 	"errors"
-	"github.com/HanDaXia/BlockChainSafeTesting/messagehub/cryptoutil"
 	"syscall"
 	"unsafe"
 )
@@ -18,7 +17,7 @@ import (
 // A pointer to the in-memory store is available in the returned CertContext's Store field.
 // The store is automatically freed when the CertContext is freed using
 // syscall.CertFreeCertificateContext.
-func createStoreContext(leaf *cryptoutil.Certificate, opts *cryptoutil.VerifyOptions) (*syscall.CertContext, error) {
+func createStoreContext(leaf *Certificate, opts *VerifyOptions) (*syscall.CertContext, error) {
 	var storeCtx *syscall.CertContext
 
 	leafCtx, err := syscall.CertCreateCertificateContext(syscall.X509_ASN_ENCODING|syscall.PKCS_7_ASN_ENCODING, &leaf.Raw[0], uint32(len(leaf.Raw)))
@@ -57,7 +56,7 @@ func createStoreContext(leaf *cryptoutil.Certificate, opts *cryptoutil.VerifyOpt
 }
 
 // extractSimpleChain extracts the final certificate chain from a CertSimpleChain.
-func extractSimpleChain(simpleChain **syscall.CertSimpleChain, count int) (chain []*cryptoutil.Certificate, err error) {
+func extractSimpleChain(simpleChain **syscall.CertSimpleChain, count int) (chain []*Certificate, err error) {
 	if simpleChain == nil || count == 0 {
 		return nil, errors.New("x509: invalid simple chain")
 	}
@@ -71,7 +70,7 @@ func extractSimpleChain(simpleChain **syscall.CertSimpleChain, count int) (chain
 		encodedCert := (*[1 << 20]byte)(unsafe.Pointer(cert.EncodedCert))[:]
 		buf := make([]byte, cert.Length)
 		copy(buf, encodedCert[:])
-		parsedCert, err := cryptoutil.ParseCertificate(buf)
+		parsedCert, err := ParseCertificate(buf)
 		if err != nil {
 			return nil, err
 		}
@@ -83,14 +82,14 @@ func extractSimpleChain(simpleChain **syscall.CertSimpleChain, count int) (chain
 
 // checkChainTrustStatus checks the trust status of the certificate chain, translating
 // any errors it finds into Go errors in the process.
-func checkChainTrustStatus(c *cryptoutil.Certificate, chainCtx *syscall.CertChainContext) error {
+func checkChainTrustStatus(c *Certificate, chainCtx *syscall.CertChainContext) error {
 	if chainCtx.TrustStatus.ErrorStatus != syscall.CERT_TRUST_NO_ERROR {
 		status := chainCtx.TrustStatus.ErrorStatus
 		switch status {
 		case syscall.CERT_TRUST_IS_NOT_TIME_VALID:
-			return cryptoutil.CertificateInvalidError{c, cryptoutil.Expired}
+			return CertificateInvalidError{c, Expired}
 		default:
-			return cryptoutil.UnknownAuthorityError{c, nil, nil}
+			return UnknownAuthorityError{c, nil, nil}
 		}
 	}
 	return nil
@@ -98,7 +97,7 @@ func checkChainTrustStatus(c *cryptoutil.Certificate, chainCtx *syscall.CertChai
 
 // checkChainSSLServerPolicy checks that the certificate chain in chainCtx is valid for
 // use as a certificate chain for a SSL/TLS server.
-func checkChainSSLServerPolicy(c *cryptoutil.Certificate, chainCtx *syscall.CertChainContext, opts *cryptoutil.VerifyOptions) error {
+func checkChainSSLServerPolicy(c *Certificate, chainCtx *syscall.CertChainContext, opts *VerifyOptions) error {
 	servernamep, err := syscall.UTF16PtrFromString(opts.DNSName)
 	if err != nil {
 		return err
@@ -126,13 +125,13 @@ func checkChainSSLServerPolicy(c *cryptoutil.Certificate, chainCtx *syscall.Cert
 	if status.Error != 0 {
 		switch status.Error {
 		case syscall.CERT_E_EXPIRED:
-			return cryptoutil.CertificateInvalidError{c, cryptoutil.Expired}
+			return CertificateInvalidError{c, Expired}
 		case syscall.CERT_E_CN_NO_MATCH:
-			return cryptoutil.HostnameError{c, opts.DNSName}
+			return HostnameError{c, opts.DNSName}
 		case syscall.CERT_E_UNTRUSTEDROOT:
-			return cryptoutil.UnknownAuthorityError{c, nil, nil}
+			return UnknownAuthorityError{c, nil, nil}
 		default:
-			return cryptoutil.UnknownAuthorityError{c, nil, nil}
+			return UnknownAuthorityError{c, nil, nil}
 		}
 	}
 
@@ -141,7 +140,7 @@ func checkChainSSLServerPolicy(c *cryptoutil.Certificate, chainCtx *syscall.Cert
 
 // systemVerify is like Verify, except that it uses CryptoAPI calls
 // to build certificate chains and verify them.
-func (c *cryptoutil.Certificate) systemVerify(opts *cryptoutil.VerifyOptions) (chains [][]*cryptoutil.Certificate, err error) {
+func (c *Certificate) systemVerify(opts *VerifyOptions) (chains [][]*Certificate, err error) {
 	hasDNSName := opts != nil && len(opts.DNSName) > 0
 
 	storeCtx, err := createStoreContext(c, opts)
@@ -226,7 +225,7 @@ func (c *cryptoutil.Certificate) systemVerify(opts *cryptoutil.VerifyOptions) (c
 	return chains, nil
 }
 
-func loadSystemRoots() (*cryptoutil.CertPool, error) {
+func loadSystemRoots() (*CertPool, error) {
 	// TODO: restore this functionality on Windows. We tried to do
 	// it in Go 1.8 but had to revert it. See Issue 18609.
 	// Returning (nil, nil) was the old behavior, prior to CL 30578.
@@ -240,7 +239,7 @@ func loadSystemRoots() (*cryptoutil.CertPool, error) {
 	}
 	defer syscall.CertCloseStore(store, 0)
 
-	roots := cryptoutil.NewCertPool()
+	roots := NewCertPool()
 	var cert *syscall.CertContext
 	for {
 		cert, err = syscall.CertEnumCertificatesInStore(store, cert)
@@ -259,7 +258,7 @@ func loadSystemRoots() (*cryptoutil.CertPool, error) {
 		buf := (*[1 << 20]byte)(unsafe.Pointer(cert.EncodedCert))[:]
 		buf2 := make([]byte, cert.Length)
 		copy(buf2, buf)
-		if c, err := cryptoutil.ParseCertificate(buf2); err == nil {
+		if c, err := ParseCertificate(buf2); err == nil {
 			roots.AddCert(c)
 		}
 	}
