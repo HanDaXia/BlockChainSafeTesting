@@ -100,8 +100,6 @@ func RegistServer(w http.ResponseWriter, r *http.Request)  {
         errMsg, _ := json.Marshal("Just surport Post request")
         ResponseWithOrigin(w, r, http.StatusBadRequest, errMsg)
     }
-
-
 }
 
 
