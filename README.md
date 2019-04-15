@@ -23,9 +23,9 @@ docker-compose –f docker/docekr-compose-sys.yaml up
 在工程目录输入以下指令:  
 docker-compose –f docker/docekr-compose-sys.yaml up  
 
-4.Open PC client for testing（fabricclient/main.exe  
+4.Open PC client for testing（fabricclient/main.exe)  
 At present, we only provide Windows version of the client, the user opens the client, imports the corresponding files to be tested and submits them to the server, then the corresponding test results can be obtained.  
 
-4.打开PC客户端进行测试（fabricclient/main.exe  
+4.打开PC客户端进行测试（fabricclient/main.exe)  
 目前我们仅提供windows版本的客户端，用户打开客户端，导入对应的待测文件并提交到服务器，即可获得对应的检测结果  
 
