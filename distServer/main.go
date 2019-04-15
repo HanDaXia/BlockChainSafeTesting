@@ -1,8 +1,9 @@
 package main
 
 import (
-    "distServer/distributor"
+
     "encoding/json"
+    "github.com/HanDaXia/BlockChainSafeTesting/distServer/distributor"
     "io/ioutil"
     "log"
     "net/http"

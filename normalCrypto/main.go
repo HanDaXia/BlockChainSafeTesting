@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/HanDaXia/BlockChainSafeTesting/normalCrypto/randomCheck"
+	"github.com/HanDaXia/BlockChainSafeTesting/normalCrypto/signatureCheck"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"normalCrypto/randomCheck"
-	"normalCrypto/signatureCheck"
 	"os"
 )
 
