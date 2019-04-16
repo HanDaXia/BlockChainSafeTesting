@@ -54,7 +54,7 @@ func (m *LedgerUI)NewLedgerConfig(mainWindow **walk.MainWindow) []Widget{
 			Layout:  HBox{},
 			Children: []Widget{
 				Label{Text: "设置服务器地址"},
-				TextEdit{AssignTo: &m.serverEdit},
+				TextEdit{AssignTo: &m.serverEdit, Text:"smverify.lab.cetcxl.com"},
 				//HSpacer{},
 			},
 		},
@@ -372,10 +372,6 @@ func (m *LedgerUI) startBtnClicked() {
 		m.status.SetText("请设置服务器地址")
 		return
 	} else {
-		tmpSplits := strings.Split(serviceUrl, ":")
-		if len(tmpSplits) == 1 {
-			serviceUrl += ":8080"
-		}
 		serviceUrl = "http://" + serviceUrl + "/Check"
 	}
 
