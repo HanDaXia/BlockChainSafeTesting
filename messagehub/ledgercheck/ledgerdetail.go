@@ -23,7 +23,13 @@ import (
 	"time"
 )
 
-
+var (
+	LocalUrl string
+	ServerUrl string
+	VerifyUrl string
+	RandomUrl string
+	RegUrl string
+)
 
 type ChannelInfo struct {
 	Protos *channelconfig.ChannelProtos
@@ -227,6 +233,11 @@ func getChannelGroupDetail(channelGroup *common.ConfigGroup) (*ChannelInfo, erro
 }
 
 func CheckDataSignature(crt *x509.Certificate, rawBytes, signature []byte) (vi VerifyInfo, err error) {
+	checkSigErrr := crt.CheckSignature(crt.SignatureAlgorithm, rawBytes, signature)
+	if checkSigErrr != nil {
+		fmt.Println("check signature error:", checkSigErrr)
+	}
+
 	hashAndSig := strings.Split(crt.SignatureAlgorithm.String(), "-")
 	if len(hashAndSig) != 2 {
 		err = errors.New("error cert signaturealgorithm")
@@ -257,7 +268,7 @@ func CheckDataSignature(crt *x509.Certificate, rawBytes, signature []byte) (vi V
 	}
 
 	sendData, _:= json.Marshal(vs)
-	resp, err := utils.PostBytes("http://172.16.0.250:8081/VerifySignature", sendData)
+	resp, err := utils.PostBytes(VerifyUrl, sendData)
 	if err != nil {
 		vi.VerifyOk = false
 		return

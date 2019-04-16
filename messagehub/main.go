@@ -11,41 +11,33 @@ import (
 	"os"
 )
 
-var (
-	localUrl string
-	serverUrl string
-	verifyUrl string
-	randomUrl string
-	regUrl string
-)
-
 func init() {
-	localUrl = os.Getenv("LOCAL_URL")
-	if len(localUrl) == 0 {
+	ledgercheck.LocalUrl = os.Getenv("LOCAL_URL")
+	if len(ledgercheck.LocalUrl) == 0 {
 		panic("environment LOCAL_URL not found")
 	}
-	localUrl += "/Check"
+	ledgercheck.LocalUrl += "/Check"
 
-	serverUrl = os.Getenv("SERVER_URL")
-	if len(serverUrl) == 0 {
+	ledgercheck.ServerUrl = os.Getenv("SERVER_URL")
+	if len(ledgercheck.ServerUrl) == 0 {
 		panic("environment SERVER_URL not found")
 	}
-	verifyUrl = serverUrl + "/VerifySignature"
-	randomUrl = serverUrl + "/RandomNumberCheck"
+	ledgercheck.VerifyUrl = ledgercheck.ServerUrl + "/VerifySignature"
+	ledgercheck.RandomUrl = ledgercheck.ServerUrl + "/RandomNumberCheck"
 
-	regUrl = os.Getenv("REGISTER_URL")
-	if len(regUrl) == 0 {
+	ledgercheck.RegUrl = os.Getenv("REGISTER_URL")
+	if len(ledgercheck.RegUrl) == 0 {
 		panic("environment REGISTER_URL not found")
 	}
-	regUrl += "/RegistServer"
+	ledgercheck.RegUrl += "/RegistServer"
 
-	regReq := ledgercheck.RegisterReq{ServerType:0, ServerAddress:localUrl}
+	regReq := ledgercheck.RegisterReq{ServerType:0, ServerAddress:ledgercheck.LocalUrl}
 	regBytes, err := json.Marshal(&regReq)
 	if err != nil {
 		fmt.Println("json.marshal error : ", err)
 		panic(err)
 	}
-	_, err = utils.PostBytes(regUrl, regBytes)
+	_, err = utils.PostBytes(ledgercheck.RegUrl, regBytes)
 	if err != nil {
 		fmt.Println("register server error : ", err)
 		panic(err)
@@ -101,7 +93,7 @@ func FabricLedgerCheck(w http.ResponseWriter, r *http.Request) {
 		randomReq := ledgercheck.RandomRequest{RandomCheckType:1}
 		randomReq.RandomData = sd.RandomData
 		reqBytes, _ := json.Marshal(randomReq)
-		randomResult, err := utils.PostBytes(randomUrl, reqBytes)
+		randomResult, err := utils.PostBytes(ledgercheck.RandomUrl, reqBytes)
 		fmt.Println(randomResult)
 		if err != nil {
 			fbRet.RandomDetail = []byte(err.Error())

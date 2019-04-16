@@ -18,19 +18,13 @@ var (
 	serviceUrl string
 )
 
-func init() {
-	serviceUrl = os.Getenv("FABRIC_SERVER_URL")
-	if len(serviceUrl) == 0 {
-		serviceUrl = "http://172.16.0.250:8080/Check"
-	}
-}
-
 type LedgerUI struct {
 	mainWindow **walk.MainWindow
 	com *walk.Composite
 	randomCom *walk.Composite
 	selectPathBtn *walk.PushButton
 	selectRandom *walk.PushButton
+	serverEdit *walk.TextEdit
 	pathEdit *walk.TextEdit
 	randonEdit *walk.TextEdit
 	startCheckBtn *walk.PushButton
@@ -55,6 +49,15 @@ type LedgerUI struct {
 func (m *LedgerUI)NewLedgerConfig(mainWindow **walk.MainWindow) []Widget{
 	m.mainWindow = mainWindow
 	return []Widget{
+		Composite{
+			MaxSize: Size{0, 40},
+			Layout:  HBox{},
+			Children: []Widget{
+				Label{Text: "设置服务器地址"},
+				TextEdit{AssignTo: &m.serverEdit},
+				//HSpacer{},
+			},
+		},
 		Composite{
 			MaxSize: Size{0, 40},
 			Layout:  HBox{},
@@ -363,6 +366,18 @@ func (m *LedgerUI)selectFileClicked() {
 func (m *LedgerUI) startBtnClicked() {
 	m.com.SetVisible(false)
 	m.randomCom.SetVisible(false)
+
+	serviceUrl = m.serverEdit.Text()
+	if len(serviceUrl) == 0 {
+		m.status.SetText("请设置服务器地址")
+		return
+	} else {
+		tmpSplits := strings.Split(serviceUrl, ":")
+		if len(tmpSplits) == 1 {
+			serviceUrl += ":8080"
+		}
+		serviceUrl = "http://" + serviceUrl + "/Check"
+	}
 
 	randomPath := m.randonEdit.Text()
 	ledgerPath := m.pathEdit.Text()

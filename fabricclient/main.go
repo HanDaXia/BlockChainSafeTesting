@@ -21,7 +21,7 @@ func main(){
 		Size: Size{1000, 750},
 		Layout:   HBox{MarginsZero: true},
 		Children: []Widget{
-			Composite{
+			ScrollView{
 				Visible: true,
 				Layout: VBox{MarginsZero: true},
 				Children: mw.ledgerUI.NewLedgerConfig(&mw.mainWindow),
