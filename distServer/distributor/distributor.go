@@ -41,6 +41,11 @@ func SendRequestToServer(request CheckRequest) ([]byte, error) {
 }
 
 func send(req *serverRequest, server string) ([]byte, error) {
+    defer func() {
+        if err := recover(); err != nil {
+            fmt.Printf("panic error：%s\n", err)
+        }
+    }()
     postData, err := json.Marshal(req)
     resp, err := http.Post(server,
         "application/x-www-form-urlencoded",

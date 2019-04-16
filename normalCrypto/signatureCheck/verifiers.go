@@ -32,7 +32,7 @@ func VerifySignature(signInfo SignatureInfo) (bool, error) {
 	result := x509.CheckSignatureNor(signatureAlgo, signInfo.PlainText, signInfo.Signature, pub)
 
 	if result != nil {
-		return false, result
+		return false, nil
 	}
 
 	return true, nil

@@ -34,7 +34,7 @@ services:
     working_dir: /usr/local/bin
     environment:
       - LOCAL_URL=http://172.16.0.250:8000
-      - SERVER_URL=http://172.16.2.250:8081
+      - SERVER_URL=http://172.16.0.250:8081
       - REGISTER_URL=http://172.16.0.250:6000
     command: messagehub
     depends_on:
