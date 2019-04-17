@@ -10,10 +10,10 @@ git clone https://github.com/HanDaXia/BlockChainSafeTesting.git
 git clone https://github.com/HanDaXia/BlockChainSafeTesting.git  
 
 2.Compile server nodes  
-To facilitate developers'use, we provide a one-click compilation function that generates all docker image files by executing make instructions in the project directory.  
+To facilitate developers'use, we provide a one-click compilation function that generates all docker image files by executing make instructions in the project directory.  Before compiling, make sure your golang verison is not smaller than v1.11.
 
 2.编译服务节点  
-为了方便开发者使用，我们提供了一键编译的功能，只需要在工程目录执行make指令就可以生成所有的docker镜像文件。  
+为了方便开发者使用，我们提供了一键编译的功能，只需要在工程目录执行make指令就可以生成所有的docker镜像文件。编译前请确保go版本在v1.11及以上。
 
 3.Start testing network  
 Type following command in your project directory   
