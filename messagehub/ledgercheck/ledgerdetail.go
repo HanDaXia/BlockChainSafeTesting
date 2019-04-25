@@ -244,8 +244,8 @@ func CheckDataSignature(crt *x509.Certificate, rawBytes, signature []byte) (vi V
 		return
 	}
 
-	vi.HashAlgo = hashAndSig[0]
-	vi.SignAlgo = hashAndSig[1]
+	vi.HashAlgo = hashAndSig[1]
+	vi.SignAlgo = hashAndSig[0]
 	vi.PubAlgo, vi.PubCurve = cert.GetPublicKeyAlgo(crt)
 	//err = crt.CheckSignature(crt.SignatureAlgorithm, rawBytes, signature)
 
